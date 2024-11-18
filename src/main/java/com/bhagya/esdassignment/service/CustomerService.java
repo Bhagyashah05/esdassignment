@@ -1,7 +1,9 @@
 package com.bhagya.esdassignment.service;
 
 import com.bhagya.esdassignment.dto.CustomerRequest;
+import com.bhagya.esdassignment.dto.CustomerResponse;
 import com.bhagya.esdassignment.dto.LoginRequest;
+import com.bhagya.esdassignment.dto.UpdateCustomerRequest;
 import com.bhagya.esdassignment.entity.Customer;
 import com.bhagya.esdassignment.exception.CustomerNotFoundException;
 import com.bhagya.esdassignment.helper.EncryptionService;
@@ -11,6 +13,8 @@ import com.bhagya.esdassignment.repo.CustomerRepo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -47,4 +51,25 @@ public class CustomerService {
         return "Customer Created Successfully";
 
     }
+
+    public void deleteCustomer(String email) {
+        Customer customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer with email " + email + " not found"));
+        customerRepo.delete(customer);
+    }
+
+    public CustomerResponse updateCustomer(String email, UpdateCustomerRequest request) {
+        Customer customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer with email " + email + " not found"));
+
+        customer.setFirstName(request.f_name());
+        customer.setLastName(request.l_name());
+
+        customerRepo.save(customer);
+        return new CustomerResponse(
+                customer.getFirstName() , customer.getLastName(),
+                customer.getEmail()
+        );
+    }
+
 }
