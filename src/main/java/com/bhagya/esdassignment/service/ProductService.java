@@ -36,4 +36,20 @@ public class ProductService {
     public List<?> getProduct() {
         return productrepo.findAll();
     }
+
+    public Object getProductById(long productid) {
+        return productrepo.findById(productid);
+    }
+
+    public Object updateProduct(long productid,ProductReq request) {
+        product curr=productrepo.findById(productid).get();
+        if(request.name()!=null){
+            curr.setName(request.name());
+        }
+        if(request.price()!=0){
+            curr.setPrice(request.price());
+        }
+        productrepo.save(curr);
+        return "Product Updated Successfully";
+    }
 }
