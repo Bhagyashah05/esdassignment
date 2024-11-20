@@ -52,4 +52,9 @@ public class ProductService {
         productrepo.save(curr);
         return "Product Updated Successfully";
     }
+
+    public Object deleteproduct(long productid) {
+        productrepo.deleteById(productid);
+        return "Product Deleted Successfully";
+    }
 }
